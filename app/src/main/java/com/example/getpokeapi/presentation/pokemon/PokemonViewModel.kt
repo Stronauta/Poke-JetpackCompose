@@ -15,9 +15,17 @@ class PokemonViewModel @Inject constructor(
 ) : ViewModel(){
 
     var uiState by mutableStateOf(PokeUiState())
+        private set
+
+    fun getPokemon(){
+        uiState = uiState.copy(
+
+        )
+    }
 }
 
 data class PokeUiState(
     val poke: PokeDto? = null
 
 )
+
