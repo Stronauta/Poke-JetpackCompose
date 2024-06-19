@@ -9,22 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,33 +32,19 @@ import com.example.getpokeapi.data.remote.dto.PokeDto
 fun PokeScreen(
     viewModel: PokeViewModel = hiltViewModel()
 ) {
-    var isInitialLoad by remember { mutableStateOf(true) }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(title = {
             Text("Pokemon List")
         })
-    }, floatingActionButton = {
-        FloatingActionButton(onClick = {
-            if (isInitialLoad) {
-                viewModel.getPokes()
-                isInitialLoad = false
-            } else {
-                viewModel.getPokes()
-            }
-        }) {
-            Icon(
-                if (isInitialLoad) Icons.Filled.Search else Icons.Filled.Refresh,
-                contentDescription = if (isInitialLoad) "Search Pokemons" else "Refresh Pokemons"
-            )
-        }
-    }) {padding ->
+    }
+    ) {padding ->
         Column(modifier = Modifier.padding(padding)) {
 
             Row {
 
                 Button(onClick = { viewModel.getPokes() }) {
-                    Text("Buscar Pokemones")
+                    Text("Buscar Pokemons")
                 }
 
                 Spacer(modifier = Modifier.weight(02f))
@@ -96,7 +73,7 @@ fun PokeScreen(
 }
 
 @Composable
-fun PokemonCell(pokemon: PokeDto) {
+fun PokemonScreenBody(pokemon: PokeDto) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -117,6 +94,7 @@ fun PokemonCell(pokemon: PokeDto) {
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium
         )
+
         Spacer(modifier = Modifier.fillMaxWidth())
     }
 

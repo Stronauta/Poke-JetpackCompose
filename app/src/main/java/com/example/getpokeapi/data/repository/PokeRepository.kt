@@ -2,7 +2,6 @@ package com.example.getpokeapi.data.repository
 
 import com.example.getpokeapi.data.remote.PokeApi
 import com.example.getpokeapi.data.remote.dto.PokeDto
-import com.example.getpokeapi.data.remote.response.PokemonList
 import com.example.getpokeapi.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,14 +22,14 @@ class PokeRepository @Inject constructor(
         }
     }
 
-    suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList>{
+/*    suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList>{
         val response = try {
             api.getPokemonList(limit, offset)
         } catch (e: Exception){
             return Resource.Error("An unknown error ocurred")
         }
         return Resource.Success(response)
-    }
+    }*/
 }
 
 
