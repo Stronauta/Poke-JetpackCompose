@@ -1,5 +1,6 @@
 package com.example.getpokeapi.data.repository
 
+import android.util.Log
 import com.example.getpokeapi.data.remote.PokeApi
 import com.example.getpokeapi.data.remote.dto.PokeDto
 import com.example.getpokeapi.util.Resource
@@ -11,25 +12,17 @@ class PokeRepository @Inject constructor(
     private val api: PokeApi
 ){
 
-
-    suspend fun getPokemon(): Flow<Resource<List<PokeDto>>>  = flow{
+     fun getPokemon(): Flow<Resource<List<PokeDto>>>  = flow{
         emit(Resource.Loading())
         try {
-            val pokemones = api.getPokemons()
-            emit(Resource.Success(pokemones))
+            val container = api.getPokemons()
+            emit(Resource.Success(container.results))
         } catch (e: Exception){
+            Log.e("PokeRepository", "getPokemon: ${e.message}" )
             emit(Resource.Error("An unknown error ocurred"))
         }
     }
 
-/*    suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList>{
-        val response = try {
-            api.getPokemonList(limit, offset)
-        } catch (e: Exception){
-            return Resource.Error("An unknown error ocurred")
-        }
-        return Resource.Success(response)
-    }*/
 }
 
 

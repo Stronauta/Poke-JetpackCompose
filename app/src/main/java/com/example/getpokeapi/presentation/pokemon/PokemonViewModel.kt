@@ -1,15 +1,14 @@
 package com.example.getpokeapi.presentation.pokemon
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.getpokeapi.data.remote.dto.PokeDto
 import com.example.getpokeapi.data.repository.PokeRepository
 import com.example.getpokeapi.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
@@ -18,43 +17,35 @@ class PokeViewModel @Inject constructor(
     private val repository: PokeRepository
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(PokeUiState())
-        private set
-
-    init {
-        viewModelScope.launch {
-        }
-    }
+    private val _uiState = MutableStateFlow(PokeUiState())
+    val uiState = _uiState.asStateFlow()
 
     fun getPokes() {
-        viewModelScope.launch {
-            repository.getPokemon().collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        uiState = PokeUiState(isLoading = true)
-                    }
 
-                    is Resource.Success -> {
-                        uiState = PokeUiState(
-                            isLoading = false,
-                            poke = result.data ?: emptyList()
-                        )
-                    }
+        repository.getPokemon().onEach { result ->
+            when (result) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(isLoading = true)
+                }
 
-                    is Resource.Error -> {
-                        uiState = PokeUiState(
-                            isLoading = false,
-                            error = result.message
-                        )
-                    }
+                is Resource.Success -> _uiState.update {
+                    it.copy(
+                        poke = result.data ?: emptyList(),
+                        isLoading = false
+                    )
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        error = result.message,
+                        isLoading = false
+                    )
                 }
             }
         }
+
     }
 
-    fun cleanList(){
-        uiState = PokeUiState()
-    }
 }
 
 data class PokeUiState(

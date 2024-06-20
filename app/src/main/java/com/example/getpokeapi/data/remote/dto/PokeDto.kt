@@ -6,3 +6,6 @@ data class PokeDto(
 
 )
 
+data class Container(
+    val results: List<PokeDto>
+)

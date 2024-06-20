@@ -4,6 +4,7 @@ import com.example.getpokeapi.data.remote.PokeApi
 import com.example.getpokeapi.data.repository.PokeRepository
 import com.example.getpokeapi.util.Constants.BASE_URL
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,6 +23,12 @@ object AppModule {
         api: PokeApi
     ) = PokeRepository(api)
 
+    @Singleton
+    @Provides
+    fun providesMoshi(): Moshi =
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
 
 
     @Provides
